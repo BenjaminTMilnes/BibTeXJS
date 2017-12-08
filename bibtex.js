@@ -1,18 +1,39 @@
+/*
 
+bibtex.js
+A JavaScript library for reading, writing, and editing BibTeX bibliographic data
+Created by B. T. Milnes
+
+Version: 0.1
+Project Page: https://github.com/BenjaminTMilnes/BibTeXJS
+
+*/
+
+// The base class from which all other BibTeX entries inherit
 class BibTeXEntry {
     constructor(name) {
+
+        // The entry name, which is one of a set list of values: book, article, ...
         this.name = name;
+
+        // The key used in citations to reference a particular entry, e.g. @book{<citationKey> ...
         this.citationKey = "";
+
         this.note = new BibTeXField("note", "");
         this.key = new BibTeXField("key", "");
     }
 }
 
+// Represents a BibTeX field, and contains the value of the field as well as other special properties
 class BibTeXField {
     constructor(name, value, isOptional, requiredFieldGroup) {
         this.name = name;
         this.value = value;
+
+        // Whether or not this field is optional; if set to true then the field is optional unless the requiredFieldGroup property is set
         this.isOptional = (typeof isOptional !== "undefined") ? isOptional : false;
+
+        // Sometimes one field out of a group of fields is required; this property represents the group name
         this.requiredFieldGroup = (typeof requiredFieldGroup !== "undefined") ? requiredFieldGroup : "";
     }
 }
@@ -33,6 +54,7 @@ var BibTeXMonth = {
     December: 12
 };
 
+// Represents the @book BibTeX entry type
 class BibTeXBook extends BibTeXEntry {
     constructor(author, title, publisher, year) {
         super("book");
@@ -51,20 +73,24 @@ class BibTeXBook extends BibTeXEntry {
     }
 }
 
+// Represents a BibTeX database, which comprises of a list of entries
 class BibTeXDatabase {
     constructor() {
         this.entries = [];
     }
 
+    // Gets the first entry in the database that has the given citation key
     getEntryByCitationKey(citationKey) {
         return this.entries.filter(entry => entry.citationKey == citationKey)[0];
     }
 
+    // Gets all of the entries in the database that are of the given type, i.e. "book"
     getEntriesByType(type) {
         return this.entries.filter(entry => entry.name == type);
     }
 }
 
+// Handles the conversion of BibTeX data from object representation to text
 class BibTeXExporter {
 
     getBibTeXEntryFields(entry) {
