@@ -9,29 +9,45 @@ class BibTeXEntry {
 }
 
 class BibTeXField {
-    constructor(name, value, isOptional = true, requiredFieldGroup = "") {
+    constructor(name, value, isOptional, requiredFieldGroup) {
         this.name = name;
         this.value = value;
-        this.isOptional = isOptional;
-        this.requiredFieldGroup = requiredFieldGroup;
+        this.isOptional = (typeof isOptional !== "undefined") ? isOptional : false;
+        this.requiredFieldGroup = (typeof requiredFieldGroup !== "undefined") ? requiredFieldGroup : "";
     }
 }
 
-class BibTeXBook extends BibTeXEntry {
-    constructor() {
-        super.constructor("book");
+var BibTeXMonth = {
+    None: 0,
+    January: 1,
+    February: 2,
+    March: 3,
+    April: 4,
+    May: 5,
+    June: 6,
+    July: 7,
+    August: 8,
+    September: 9,
+    October: 10,
+    November: 11,
+    December: 12
+};
 
-        this.author = new BibTeXField("author", "", true, "author/editor");
+class BibTeXBook extends BibTeXEntry {
+    constructor(author, title, publisher, year) {
+        super("book");
+
+        this.author = new BibTeXField("author", author, true, "author/editor");
         this.editor = new BibTeXField("editor", "", true, "author/editor");
-        this.title = new BibTeXField("title", "", false);
-        this.publisher = new BibTeXField("publisher", "", false);
-        this.year = new BibTeXField("year", "", false);
-        this.volume = new BibTeXField("volume", "");
-        this.number = new BibTeXField("number", "");
-        this.series = new BibTeXField("series", "");
-        this.address = new BibTeXField("address", "");
-        this.edition = new BibTeXField("edition", "");
-        this.month = new BibTeXField("month", "");
+        this.title = new BibTeXField("title", title);
+        this.publisher = new BibTeXField("publisher", publisher);
+        this.year = new BibTeXField("year", year);
+        this.volume = new BibTeXField("volume", "", true);
+        this.number = new BibTeXField("number", "", true);
+        this.series = new BibTeXField("series", "", true);
+        this.address = new BibTeXField("address", "", true);
+        this.edition = new BibTeXField("edition", "", true);
+        this.month = new BibTeXField("month", BibTeXMonth.None, true);
     }
 }
 
@@ -40,10 +56,10 @@ class BibTeXExporter {
     getBibTeXEntryFields(entry) {
         var fields = [];
 
-        for (var propertyName in entry){
+        for (var propertyName in entry) {
             var property = entry[propertyName];
 
-            if (property instanceof BibTeXField){
+            if (property instanceof BibTeXField) {
                 fields.push(property);
             }
         }
@@ -52,13 +68,13 @@ class BibTeXExporter {
     }
 
     convertBibTeXFieldToText(field) {
-        return  field.name + " = \"" + field.value + "\"";
+        return field.name + " = \"" + field.value + "\"";
     }
 
-    convertBibTeXFieldsToText(fields){
+    convertBibTeXFieldsToText(fields) {
         var text = "";
 
-        for (var i =0; i < fields.length; i++){
+        for (var i = 0; i < fields.length; i++) {
             var field = fields[i];
 
             text += ",\n\t" + this.convertBibTeXFieldToText(field);
