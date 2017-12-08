@@ -51,6 +51,20 @@ class BibTeXBook extends BibTeXEntry {
     }
 }
 
+class BibTeXDatabase {
+    constructor() {
+        this.entries = [];
+    }
+
+    getEntryByCitationKey(citationKey) {
+        return this.entries.filter(entry => entry.citationKey == citationKey)[0];
+    }
+
+    getEntriesByType(type) {
+        return this.entries.filter(entry => entry.name == type);
+    }
+}
+
 class BibTeXExporter {
 
     getBibTeXEntryFields(entry) {
@@ -89,9 +103,20 @@ class BibTeXExporter {
 
         text += "@" + entry.name + "{" + entry.citationKey;
         text += this.convertBibTeXFieldsToText(fields);
-        text += "}\n";
+        text += "}\n\n";
 
         return text;
     }
 
+    convertBibTeXDatabaseToText(database) {
+        var text = "";
+
+        for (var i = 0; i < database.entries.length; i++) {
+            var entry = database.entries[i];
+
+            text += this.convertBibTeXEntryToText(entry);
+        }
+
+        return text;
+    }
 }
