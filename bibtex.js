@@ -39,19 +39,30 @@ class BibTeXField {
 }
 
 var BibTeXMonth = {
-    None: 0,
-    January: 1,
-    February: 2,
-    March: 3,
-    April: 4,
-    May: 5,
-    June: 6,
-    July: 7,
-    August: 8,
-    September: 9,
-    October: 10,
-    November: 11,
-    December: 12
+    None: {value: 0, long: "", short:""},
+    January:  {value: 1, long: "January", short:"Jan"},
+    February:  {value: 2, long: "February", short:"Feb"},
+    March:  {value: 3, long: "March", short:"Mar"},
+    April:  {value: 4, long: "April", short:"Apr"},
+    May:  {value: 5, long: "May", short:"May"},
+    June:  {value: 6, long: "June", short:"Jun"},
+    July:  {value: 7, long: "July", short:"Jul"},
+    August:  {value: 8, long: "August", short:"Aug"},
+    September:  {value: 9, long: "September", short:"Sep"},
+    October:  {value: 10, long: "October", short:"Oct"},
+    November:  {value: 11, long: "November", short:"Nov"},
+    December:  {value: 12, long: "December", short:"Dec"}
+};
+
+var BibTeXMonthStyle = {
+    // e.g. January, February, March
+    Long : 0,
+
+    // e.g. Jan, Feb, Mar
+    Short : 1,
+
+    // e.g. 1, 2, 3
+    Numeric : 2
 };
 
 // Represents the @book BibTeX entry type
@@ -89,6 +100,11 @@ class BibTeXDatabase {
         return this.entries.filter(entry => entry.name == type);
     }
 }
+
+var BibTeXFormatStyle = {
+    Minimal: 0,
+    Readable: 1
+};
 
 // Handles the conversion of BibTeX data from object representation to text
 class BibTeXExporter {
