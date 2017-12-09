@@ -118,6 +118,23 @@ var BibTeXFormatStyle = {
 // Handles the conversion of BibTeX data from object representation to text
 class BibTeXExporter {
 
+    constructor(beginEndFieldValueCharacterType = BibTeXBeginEndFieldValueCharacterType.QuotationMarks, monthStyle = BibTeXMonthStyle.Long, formatStyle = BibTeXFormatStyle.Readable, includeNullFields = false){
+        this.beginEndFieldValueCharacterType = beginEndFieldValueCharacterType;
+
+        if (this.beginEndFieldValueCharacterType == BibTeXBeginEndFieldValueCharacterType.QuotationMarks){
+            this.beginFieldValueCharacter = "\"";
+            this.endFieldValueCharacter = "\"";
+        }
+        else if (this.beginEndFieldValueCharacterType == BibTeXBeginEndFieldValueCharacterType.RecurveBrackets){
+          this.beginFieldValueCharacter = "{";
+            this.endFieldValueCharacter = "}";
+        }
+
+        this.monthStyle = monthStyle;
+        this.formatStyle = formatStyle;
+        this.includeNullFields = includeNullFields;
+    }
+
     getBibTeXEntryFields(entry) {
         var fields = [];
 
@@ -132,8 +149,41 @@ class BibTeXExporter {
         return fields;
     }
 
+    convertBibTeXFieldValueToText(fieldValue){
+        if (fieldValue instanceof BibTeXMonth){
+            if (this.monthStyle == BibTeXMonthStyle.Short){
+                return fieldValue.short;
+            }
+            if (this.monthStyle == BibTeXMonthStyle.Numeric){
+                if (fieldValue.value > 0){
+                    return fieldValue.value;
+                }
+                return "";
+            }
+            return fieldValue.long;
+        }
+        else{
+            return fieldValue;
+        }
+    }
+
     convertBibTeXFieldToText(field) {
-        return field.name + " = \"" + field.value + "\"";
+        var text = "";
+
+        text += field.name;
+
+        if (this.formatStyle == BibTeXFormatStyle.Minimal){
+            text += "=";
+        }
+        else{
+            text += " = ";
+        }
+
+        text += this.beginFieldValueCharacter ;
+        text += this.convertBibTeXFieldValueToText(field.value);
+        text += this.endFieldValueCharacter;
+
+        return text;
     }
 
     convertBibTeXFieldsToText(fields) {
@@ -142,7 +192,13 @@ class BibTeXExporter {
         for (var i = 0; i < fields.length; i++) {
             var field = fields[i];
 
-            text += ",\n\t" + this.convertBibTeXFieldToText(field);
+            text += ",";
+
+            if (this.formatStyle == BibTeXFormatStyle.Readable){
+                text += "\n\t";
+            }
+
+            text += this.convertBibTeXFieldToText(field);
         }
 
         return text;
@@ -154,20 +210,28 @@ class BibTeXExporter {
 
         text += "@" + entry.name + "{" + entry.citationKey;
         text += this.convertBibTeXFieldsToText(fields);
-        text += "}\n\n";
+        text += "} ";
+
+        if (this.formatStyle == BibTeXFormatStyle.Readable){
+            text += "\n\n";
+        }
 
         return text;
     }
 
-    convertBibTeXDatabaseToText(database) {
+    convertBibTeXEntriesToText(entries){
         var text = "";
 
-        for (var i = 0; i < database.entries.length; i++) {
-            var entry = database.entries[i];
+        for (var i = 0; i < entries.length; i++) {
+            var entry = entries[i];
 
             text += this.convertBibTeXEntryToText(entry);
         }
 
         return text;
+    }
+
+    convertBibTeXDatabaseToText(database) {
+        return this.convertBibTeXEntriesToText(database.entries);
     }
 }
