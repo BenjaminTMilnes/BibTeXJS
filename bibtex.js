@@ -135,7 +135,7 @@ class BibTeXExporter {
         this.includeNullFields = includeNullFields;
     }
 
-    getBibTeXEntryFields(entry) {
+    static getBibTeXEntryFields(entry) {
         var fields = [];
 
         for (var propertyName in entry) {
@@ -233,5 +233,46 @@ class BibTeXExporter {
 
     convertBibTeXDatabaseToText(database) {
         return this.convertBibTeXEntriesToText(database.entries);
+    }
+}
+
+class Exception{
+}
+
+class BibTeXEntryNameIsNoneException extends Exception{
+    constructor(entry){
+        this.entry = entry;
+    }
+
+    toString(){
+    }
+}
+
+class CitationKeyIsNoneException extends Exception{
+    constructor(entry){
+        this.entry = entry;
+    }
+
+    toString(){
+    }
+}
+
+class BibTeXValidator {
+    constructor(){}
+
+    validateBibTeXEntry(entry){
+
+        if (entry.name == ""){
+            throw new BibTeXEntryNameIsNoneException(entry);
+        }
+
+        if (entry.citationKey == ""){
+            throw new CitationKeyIsNoneException(entry);
+        }
+
+    }
+
+    validateBibTeXDatabase(database){
+
     }
 }
