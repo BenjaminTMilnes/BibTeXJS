@@ -84,6 +84,19 @@ class BibTeXBook extends BibTeXEntry {
     }
 }
 
+// Technically not a BibTeX entry type, but I need it; represents a single webpage
+class BibTeXWebpage extends BibTeXEntry {
+    constructor(author, title, url, dateAccessed){
+        super("webpage");
+
+        this.author = new BibTeXField("author", author, true);
+        this.title = new BibTeXField("title", title);
+        this.websiteTitle = new BibTeXField("website_title", "", true);
+        this.url = new BibTeXField("url", url);
+        this.dateAccessed = new BibTeXField("date_accessed", dateAccessed);
+    }
+}
+
 // Represents a BibTeX database, which comprises of a list of entries
 class BibTeXDatabase {
     constructor() {
@@ -192,13 +205,15 @@ class BibTeXExporter {
         for (var i = 0; i < fields.length; i++) {
             var field = fields[i];
 
-            text += ",";
+            if (this.convertBibTeXFieldToText(field) == ""){
+                text += ",";
 
-            if (this.formatStyle == BibTeXFormatStyle.Readable){
-                text += "\n\t";
+                if (this.formatStyle == BibTeXFormatStyle.Readable){
+                    text += "\n\t";
+                }
+
+                text += this.convertBibTeXFieldToText(field);
             }
-
-            text += this.convertBibTeXFieldToText(field);
         }
 
         return text;
