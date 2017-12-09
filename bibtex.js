@@ -101,8 +101,17 @@ class BibTeXDatabase {
     }
 }
 
+var BibTeXBeginEndFieldValueCharacterType = {
+    QuotationMarks :0,
+    RecurveBrackets: 1
+}
+
+// An enumeration for determining how outputted BibTeX is formatted
 var BibTeXFormatStyle = {
+    // Don't add extra white-space; use as few characters as possible
     Minimal: 0,
+
+    // Add line breaks and extra spaces to make the BibTeX easily readable
     Readable: 1
 };
 
