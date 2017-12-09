@@ -162,8 +162,28 @@ class BibTeXExporter {
         return fields;
     }
 
+    static listContainsObject(l, o){
+        for (var i = 0; i < l.length; i++){
+            if (l[i] === o){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    isFieldValueMonth(fieldValue){
+        var months = [BibTeXMonth.None, BibTeXMonth.January, BibTeXMonth.February, BibTeXMonth.March, BibTeXMonth.April, BibTeXMonth.May, BibTeXMonth.June, BibTeXMonth.July, BibTeXMonth.August, BibTeXMonth.September, BibTeXMonth.October, BibTeXMonth.November, BibTeXMonth.December];
+
+        return BibTeXExporter.listContainsObject(months, fieldValue);
+    }
+
     convertBibTeXFieldValueToText(fieldValue){
-        if (fieldValue instanceof BibTeXMonth){
+        if (typeof fieldValue === "undefined" || fieldValue == ""){
+            return "";
+        }
+
+        if (this.isFieldValueMonth(fieldValue)){
             if (this.monthStyle == BibTeXMonthStyle.Short){
                 return fieldValue.short;
             }
@@ -175,9 +195,8 @@ class BibTeXExporter {
             }
             return fieldValue.long;
         }
-        else{
-            return fieldValue;
-        }
+
+        return fieldValue;
     }
 
     convertBibTeXFieldToText(field) {
@@ -205,7 +224,7 @@ class BibTeXExporter {
         for (var i = 0; i < fields.length; i++) {
             var field = fields[i];
 
-            if (this.convertBibTeXFieldToText(field) == ""){
+            if (this.convertBibTeXFieldValueToText(field.value) != ""){
                 text += ",";
 
                 if (this.formatStyle == BibTeXFormatStyle.Readable){
@@ -220,12 +239,12 @@ class BibTeXExporter {
     }
 
     convertBibTeXEntryToText(entry) {
-        var fields = this.getBibTeXEntryFields(entry);
+        var fields = BibTeXExporter.getBibTeXEntryFields(entry);
         var text = "";
 
         text += "@" + entry.name + "{" + entry.citationKey;
         text += this.convertBibTeXFieldsToText(fields);
-        text += "} ";
+        text += "\n} ";
 
         if (this.formatStyle == BibTeXFormatStyle.Readable){
             text += "\n\n";
