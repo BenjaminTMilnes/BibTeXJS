@@ -1,0 +1,7 @@
+{
+  "spec_dir": "",
+  "spec_files": [ "bibtex-tests.js" ],
+  "helpers": [ "bibtex.js" ],
+  "stopSpecOnExpectationFailure": true,
+  "random": false
+}
