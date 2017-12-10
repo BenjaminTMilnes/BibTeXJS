@@ -1,0 +1,23 @@
+{
+  "name": "bibtexjs",
+  "description": "BibTeXJS is a JavaScript library for reading, writing, and editing BibTeX bibliographic data. It is essentially a JavaScript version of a library I wrote in C# (https://github.com/BenjaminTMilnes/BibTeX).",
+  "version": "0.1.0",
+  "main": "bibtex.js",
+  "dependencies": {
+    "jasmine": "^2.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BenjaminTMilnes/BibTeXJS.git"
+  },
+  "author": "B. T. Milnes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BenjaminTMilnes/BibTeXJS/issues"
+  },
+  "homepage": "https://github.com/BenjaminTMilnes/BibTeXJS#readme"
+}
