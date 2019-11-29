@@ -14,5 +14,8 @@
   "bugs": {
     "url": "https://github.com/BenjaminTMilnes/BibTeXJS/issues"
   },
-  "homepage": "https://github.com/BenjaminTMilnes/BibTeXJS#readme"
+  "homepage": "https://github.com/BenjaminTMilnes/BibTeXJS#readme",
+  "dependencies": {
+    "mocha": "^6.2.2"
+  }
 }
