@@ -1,13 +1,3 @@
-/*
-
-bibtex.js
-A JavaScript library for reading, writing, and editing BibTeX bibliographic data
-Created by B. T. Milnes
-
-Version: 0.1
-Project Page: https://github.com/BenjaminTMilnes/BibTeXJS
-
-*/
 
 // The base class from which all other BibTeX entries inherit
 class BibTeXEntry {
