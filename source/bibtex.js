@@ -1,6 +1,6 @@
 
 // The base class from which all other BibTeX entries inherit
-class BibTeXEntry {
+export class BibTeXEntry {
     constructor(name) {
 
         // The entry name, which is one of a set list of values: book, article, ...
@@ -15,7 +15,7 @@ class BibTeXEntry {
 }
 
 // Represents a BibTeX field, and contains the value of the field as well as other special properties
-class BibTeXField {
+export class BibTeXField {
     constructor(name, value, isOptional, requiredFieldGroup) {
         this.name = name;
         this.value = value;
@@ -28,7 +28,7 @@ class BibTeXField {
     }
 }
 
-var BibTeXMonth = {
+export var BibTeXMonth = {
     None: {value: 0, long: "", short:""},
     January:  {value: 1, long: "January", short:"Jan"},
     February:  {value: 2, long: "February", short:"Feb"},
@@ -44,7 +44,7 @@ var BibTeXMonth = {
     December:  {value: 12, long: "December", short:"Dec"}
 };
 
-var BibTeXMonthStyle = {
+export var BibTeXMonthStyle = {
     // e.g. January, February, March
     Long : 0,
 
@@ -56,7 +56,7 @@ var BibTeXMonthStyle = {
 };
 
 // Represents the @book BibTeX entry type
-class BibTeXBook extends BibTeXEntry {
+export class BibTeXBook extends BibTeXEntry {
     constructor(author, title, publisher, year) {
         super("book");
 
@@ -75,7 +75,7 @@ class BibTeXBook extends BibTeXEntry {
 }
 
 // Technically not a BibTeX entry type, but I need it; represents a single webpage
-class BibTeXWebpage extends BibTeXEntry {
+export class BibTeXWebpage extends BibTeXEntry {
     constructor(author, title, url, dateAccessed){
         super("webpage");
 
@@ -88,7 +88,7 @@ class BibTeXWebpage extends BibTeXEntry {
 }
 
 // Represents a BibTeX database, which comprises of a list of entries
-class BibTeXDatabase {
+export class BibTeXDatabase {
     constructor() {
         this.entries = [];
     }
@@ -104,13 +104,13 @@ class BibTeXDatabase {
     }
 }
 
-var BibTeXBeginEndFieldValueCharacterType = {
+export var BibTeXBeginEndFieldValueCharacterType = {
     QuotationMarks :0,
     RecurveBrackets: 1
 }
 
 // An enumeration for determining how outputted BibTeX is formatted
-var BibTeXFormatStyle = {
+export var BibTeXFormatStyle = {
     // Don't add extra white-space; use as few characters as possible
     Minimal: 0,
 
@@ -119,7 +119,7 @@ var BibTeXFormatStyle = {
 };
 
 // Handles the conversion of BibTeX data from object representation to text
-class BibTeXExporter {
+export class BibTeXExporter {
 
     constructor(beginEndFieldValueCharacterType = BibTeXBeginEndFieldValueCharacterType.QuotationMarks, monthStyle = BibTeXMonthStyle.Long, formatStyle = BibTeXFormatStyle.Readable, includeNullFields = false){
         this.beginEndFieldValueCharacterType = beginEndFieldValueCharacterType;
@@ -281,7 +281,7 @@ class CitationKeyIsNoneException extends Exception{
     }
 }
 
-class BibTeXValidator {
+export class BibTeXValidator {
     constructor(){}
 
     validateBibTeXEntry(entry){
