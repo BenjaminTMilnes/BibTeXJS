@@ -28,7 +28,7 @@ export class BibTeXField {
     }
 }
 
-export var BibTeXMonth = {
+export const BibTeXMonth = {
     None: {value: 0, long: "", short:""},
     January:  {value: 1, long: "January", short:"Jan"},
     February:  {value: 2, long: "February", short:"Feb"},
@@ -44,7 +44,7 @@ export var BibTeXMonth = {
     December:  {value: 12, long: "December", short:"Dec"}
 };
 
-export var BibTeXMonthStyle = {
+export const BibTeXMonthStyle = {
     // e.g. January, February, March
     Long : 0,
 
@@ -104,13 +104,13 @@ export class BibTeXDatabase {
     }
 }
 
-export var BibTeXBeginEndFieldValueCharacterType = {
+export const BibTeXBeginEndFieldValueCharacterType = {
     QuotationMarks :0,
     RecurveBrackets: 1
 }
 
 // An enumeration for determining how outputted BibTeX is formatted
-export var BibTeXFormatStyle = {
+export const BibTeXFormatStyle = {
     // Don't add extra white-space; use as few characters as possible
     Minimal: 0,
 
@@ -257,46 +257,5 @@ export class BibTeXExporter {
 
     convertBibTeXDatabaseToText(database) {
         return this.convertBibTeXEntriesToText(database.entries);
-    }
-}
-
-class Exception{
-}
-
-class BibTeXEntryNameIsNoneException extends Exception{
-    constructor(entry){
-        this.entry = entry;
-    }
-
-    toString(){
-    }
-}
-
-class CitationKeyIsNoneException extends Exception{
-    constructor(entry){
-        this.entry = entry;
-    }
-
-    toString(){
-    }
-}
-
-export class BibTeXValidator {
-    constructor(){}
-
-    validateBibTeXEntry(entry){
-
-        if (entry.name == ""){
-            throw new BibTeXEntryNameIsNoneException(entry);
-        }
-
-        if (entry.citationKey == ""){
-            throw new CitationKeyIsNoneException(entry);
-        }
-
-    }
-
-    validateBibTeXDatabase(database){
-
     }
 }
