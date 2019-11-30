@@ -316,17 +316,8 @@ export class BibTeXExporter {
     }
 
     convertBibTeXEntriesToText(entries) {
-        var text = "";
-
-        for (var i = 0; i < entries.length; i++) {
-            var entry = entries[i];
-
-            text += this.convertBibTeXEntryToText(entry);
-        }
-
-        return text;
+        return entries.map(e => this.convertBibTeXEntryToText(e)).join("");
     }
-
     convertBibTeXDatabaseToText(database) {
         return this.convertBibTeXEntriesToText(database.entries);
     }
