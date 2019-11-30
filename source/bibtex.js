@@ -29,30 +29,30 @@ export class BibTeXField {
 }
 
 export const BibTeXMonth = {
-    None: {value: 0, long: "", short:""},
-    January:  {value: 1, long: "January", short:"Jan"},
-    February:  {value: 2, long: "February", short:"Feb"},
-    March:  {value: 3, long: "March", short:"Mar"},
-    April:  {value: 4, long: "April", short:"Apr"},
-    May:  {value: 5, long: "May", short:"May"},
-    June:  {value: 6, long: "June", short:"Jun"},
-    July:  {value: 7, long: "July", short:"Jul"},
-    August:  {value: 8, long: "August", short:"Aug"},
-    September:  {value: 9, long: "September", short:"Sep"},
-    October:  {value: 10, long: "October", short:"Oct"},
-    November:  {value: 11, long: "November", short:"Nov"},
-    December:  {value: 12, long: "December", short:"Dec"}
+    None: { value: 0, long: "", short: "" },
+    January: { value: 1, long: "January", short: "Jan" },
+    February: { value: 2, long: "February", short: "Feb" },
+    March: { value: 3, long: "March", short: "Mar" },
+    April: { value: 4, long: "April", short: "Apr" },
+    May: { value: 5, long: "May", short: "May" },
+    June: { value: 6, long: "June", short: "Jun" },
+    July: { value: 7, long: "July", short: "Jul" },
+    August: { value: 8, long: "August", short: "Aug" },
+    September: { value: 9, long: "September", short: "Sep" },
+    October: { value: 10, long: "October", short: "Oct" },
+    November: { value: 11, long: "November", short: "Nov" },
+    December: { value: 12, long: "December", short: "Dec" }
 };
 
 export const BibTeXMonthStyle = {
     // e.g. January, February, March
-    Long : 0,
+    Long: 0,
 
     // e.g. Jan, Feb, Mar
-    Short : 1,
+    Short: 1,
 
     // e.g. 1, 2, 3
-    Numeric : 2
+    Numeric: 2
 };
 
 // Represents the @book BibTeX entry type
@@ -74,9 +74,25 @@ export class BibTeXBook extends BibTeXEntry {
     }
 }
 
+// Represents the @article BibTeX entry type
+export class BibTeXArticle extends BibTeXEntry {
+    constructor(author, title, journal, year, volume) {
+        super("article");
+
+        this.author = new BibTeXField("author", author);
+        this.title = new BibTeXField("title", title);
+        this.journal = new BibTeXField("journal", journal);
+        this.year = new BibTeXField("year", year);
+        this.volume = new BibTeXField("volume", volume);
+        this.number = new BibTeXField("number", "", true);
+        this.pages = new BibTeXField("pages", "", true);
+        this.month = new BibTeXField("month", BibTeXMonth.None, true);
+    }
+}
+
 // Technically not a BibTeX entry type, but I need it; represents a single webpage
 export class BibTeXWebpage extends BibTeXEntry {
-    constructor(author, title, url, dateAccessed){
+    constructor(author, title, url, dateAccessed) {
         super("webpage");
 
         this.author = new BibTeXField("author", author, true);
@@ -105,7 +121,7 @@ export class BibTeXDatabase {
 }
 
 export const BibTeXBeginEndFieldValueCharacterType = {
-    QuotationMarks :0,
+    QuotationMarks: 0,
     RecurveBrackets: 1
 }
 
@@ -121,15 +137,15 @@ export const BibTeXFormatStyle = {
 // Handles the conversion of BibTeX data from object representation to text
 export class BibTeXExporter {
 
-    constructor(beginEndFieldValueCharacterType = BibTeXBeginEndFieldValueCharacterType.QuotationMarks, monthStyle = BibTeXMonthStyle.Long, formatStyle = BibTeXFormatStyle.Readable, includeNullFields = false){
+    constructor(beginEndFieldValueCharacterType = BibTeXBeginEndFieldValueCharacterType.QuotationMarks, monthStyle = BibTeXMonthStyle.Long, formatStyle = BibTeXFormatStyle.Readable, includeNullFields = false) {
         this.beginEndFieldValueCharacterType = beginEndFieldValueCharacterType;
 
-        if (this.beginEndFieldValueCharacterType == BibTeXBeginEndFieldValueCharacterType.QuotationMarks){
+        if (this.beginEndFieldValueCharacterType == BibTeXBeginEndFieldValueCharacterType.QuotationMarks) {
             this.beginFieldValueCharacter = "\"";
             this.endFieldValueCharacter = "\"";
         }
-        else if (this.beginEndFieldValueCharacterType == BibTeXBeginEndFieldValueCharacterType.RecurveBrackets){
-          this.beginFieldValueCharacter = "{";
+        else if (this.beginEndFieldValueCharacterType == BibTeXBeginEndFieldValueCharacterType.RecurveBrackets) {
+            this.beginFieldValueCharacter = "{";
             this.endFieldValueCharacter = "}";
         }
 
@@ -152,9 +168,9 @@ export class BibTeXExporter {
         return fields;
     }
 
-    static listContainsObject(l, o){
-        for (var i = 0; i < l.length; i++){
-            if (l[i] === o){
+    static listContainsObject(l, o) {
+        for (var i = 0; i < l.length; i++) {
+            if (l[i] === o) {
                 return true;
             }
         }
@@ -162,23 +178,23 @@ export class BibTeXExporter {
         return false;
     }
 
-    isFieldValueMonth(fieldValue){
+    isFieldValueMonth(fieldValue) {
         var months = [BibTeXMonth.None, BibTeXMonth.January, BibTeXMonth.February, BibTeXMonth.March, BibTeXMonth.April, BibTeXMonth.May, BibTeXMonth.June, BibTeXMonth.July, BibTeXMonth.August, BibTeXMonth.September, BibTeXMonth.October, BibTeXMonth.November, BibTeXMonth.December];
 
         return BibTeXExporter.listContainsObject(months, fieldValue);
     }
 
-    convertBibTeXFieldValueToText(fieldValue){
-        if (typeof fieldValue === "undefined" || fieldValue == ""){
+    convertBibTeXFieldValueToText(fieldValue) {
+        if (typeof fieldValue === "undefined" || fieldValue == "") {
             return "";
         }
 
-        if (this.isFieldValueMonth(fieldValue)){
-            if (this.monthStyle == BibTeXMonthStyle.Short){
+        if (this.isFieldValueMonth(fieldValue)) {
+            if (this.monthStyle == BibTeXMonthStyle.Short) {
                 return fieldValue.short;
             }
-            if (this.monthStyle == BibTeXMonthStyle.Numeric){
-                if (fieldValue.value > 0){
+            if (this.monthStyle == BibTeXMonthStyle.Numeric) {
+                if (fieldValue.value > 0) {
                     return fieldValue.value;
                 }
                 return "";
@@ -194,14 +210,14 @@ export class BibTeXExporter {
 
         text += field.name;
 
-        if (this.formatStyle == BibTeXFormatStyle.Minimal){
+        if (this.formatStyle == BibTeXFormatStyle.Minimal) {
             text += "=";
         }
-        else{
+        else {
             text += " = ";
         }
 
-        text += this.beginFieldValueCharacter ;
+        text += this.beginFieldValueCharacter;
         text += this.convertBibTeXFieldValueToText(field.value);
         text += this.endFieldValueCharacter;
 
@@ -214,10 +230,10 @@ export class BibTeXExporter {
         for (var i = 0; i < fields.length; i++) {
             var field = fields[i];
 
-            if (this.convertBibTeXFieldValueToText(field.value) != ""){
+            if (this.convertBibTeXFieldValueToText(field.value) != "") {
                 text += ",";
 
-                if (this.formatStyle == BibTeXFormatStyle.Readable){
+                if (this.formatStyle == BibTeXFormatStyle.Readable) {
                     text += "\n\t";
                 }
 
@@ -236,14 +252,14 @@ export class BibTeXExporter {
         text += this.convertBibTeXFieldsToText(fields);
         text += "\n} ";
 
-        if (this.formatStyle == BibTeXFormatStyle.Readable){
+        if (this.formatStyle == BibTeXFormatStyle.Readable) {
             text += "\n\n";
         }
 
         return text;
     }
 
-    convertBibTeXEntriesToText(entries){
+    convertBibTeXEntriesToText(entries) {
         var text = "";
 
         for (var i = 0; i < entries.length; i++) {
