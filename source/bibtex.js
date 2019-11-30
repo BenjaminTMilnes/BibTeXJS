@@ -60,17 +60,31 @@ export class BibTeXBook extends BibTeXEntry {
     constructor(author, title, publisher, year) {
         super("book");
 
+        this.title = new BibTeXField("title", title);
         this.author = new BibTeXField("author", author, true, "author/editor");
         this.editor = new BibTeXField("editor", "", true, "author/editor");
-        this.title = new BibTeXField("title", title);
         this.publisher = new BibTeXField("publisher", publisher);
         this.year = new BibTeXField("year", year);
+        this.month = new BibTeXField("month", BibTeXMonth.None, true);
         this.volume = new BibTeXField("volume", "", true);
         this.number = new BibTeXField("number", "", true);
         this.series = new BibTeXField("series", "", true);
         this.address = new BibTeXField("address", "", true);
         this.edition = new BibTeXField("edition", "", true);
+    }
+}
+
+// Represents the @booklet BibTeX entry type
+export class BibTeXBooklet extends BibTeXEntry {
+    constructor(title) {
+        super("booklet");
+
+        this.title = new BibTeXField("title", title);
+        this.author = new BibTeXField("author", "", true);
+        this.howPublished = new BibTeXField("howpublished", "", true);
+        this.year = new BibTeXField("year", "", true);
         this.month = new BibTeXField("month", BibTeXMonth.None, true);
+        this.address = new BibTeXField("address", "", true);
     }
 }
 
@@ -79,14 +93,14 @@ export class BibTeXArticle extends BibTeXEntry {
     constructor(author, title, journal, year, volume) {
         super("article");
 
-        this.author = new BibTeXField("author", author);
         this.title = new BibTeXField("title", title);
+        this.author = new BibTeXField("author", author);
         this.journal = new BibTeXField("journal", journal);
         this.year = new BibTeXField("year", year);
+        this.month = new BibTeXField("month", BibTeXMonth.None, true);
         this.volume = new BibTeXField("volume", volume);
         this.number = new BibTeXField("number", "", true);
         this.pages = new BibTeXField("pages", "", true);
-        this.month = new BibTeXField("month", BibTeXMonth.None, true);
     }
 }
 
