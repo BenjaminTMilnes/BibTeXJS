@@ -57,20 +57,54 @@ export const BibTeXMonthStyle = {
 
 // Represents the @book BibTeX entry type
 export class BibTeXBook extends BibTeXEntry {
-    constructor(author, title, publisher, year) {
+    constructor(title, author, publisher, year) {
         super("book");
 
         this.title = new BibTeXField("title", title);
+        this.edition = new BibTeXField("edition", "", true);
+
         this.author = new BibTeXField("author", author, true, "author/editor");
         this.editor = new BibTeXField("editor", "", true, "author/editor");
+
         this.publisher = new BibTeXField("publisher", publisher);
+        this.address = new BibTeXField("address", "", true);
+
         this.year = new BibTeXField("year", year);
         this.month = new BibTeXField("month", BibTeXMonth.None, true);
+
         this.volume = new BibTeXField("volume", "", true);
         this.number = new BibTeXField("number", "", true);
+
         this.series = new BibTeXField("series", "", true);
-        this.address = new BibTeXField("address", "", true);
+    }
+}
+
+// Represents the @inbook BibTeX entry type
+export class BibTeXInBook extends BibTeXEntry {
+    constructor(title, author, publisher, year, chapter) {
+        super("inbook");
+
+        this.title = new BibTeXField("title", title);
         this.edition = new BibTeXField("edition", "", true);
+
+        this.author = new BibTeXField("author", author, true, "author/editor");
+        this.editor = new BibTeXField("editor", "", true, "author/editor");
+
+        this.publisher = new BibTeXField("publisher", publisher);
+        this.address = new BibTeXField("address", "", true);
+
+        this.year = new BibTeXField("year", year);
+        this.month = new BibTeXField("month", BibTeXMonth.None, true);
+
+        this.volume = new BibTeXField("volume", "", true);
+        this.number = new BibTeXField("number", "", true);
+
+        this.series = new BibTeXField("series", "", true);
+
+        this.chapter = new BibTeXField("chapter", chapter, true, "chapter/pages");
+        this.pages = new BibTeXField("pages", "", true, "chapter/pages");
+
+        this.type = new BibTeXField("type", "", true);
     }
 }
 
@@ -80,26 +114,34 @@ export class BibTeXBooklet extends BibTeXEntry {
         super("booklet");
 
         this.title = new BibTeXField("title", title);
+
         this.author = new BibTeXField("author", "", true);
+
         this.howPublished = new BibTeXField("howpublished", "", true);
+        this.address = new BibTeXField("address", "", true);
+
         this.year = new BibTeXField("year", "", true);
         this.month = new BibTeXField("month", BibTeXMonth.None, true);
-        this.address = new BibTeXField("address", "", true);
     }
 }
 
 // Represents the @article BibTeX entry type
 export class BibTeXArticle extends BibTeXEntry {
-    constructor(author, title, journal, year, volume) {
+    constructor(title, author, journal, year, volume) {
         super("article");
 
         this.title = new BibTeXField("title", title);
+
         this.author = new BibTeXField("author", author);
+
         this.journal = new BibTeXField("journal", journal);
+
         this.year = new BibTeXField("year", year);
         this.month = new BibTeXField("month", BibTeXMonth.None, true);
+
         this.volume = new BibTeXField("volume", volume);
         this.number = new BibTeXField("number", "", true);
+
         this.pages = new BibTeXField("pages", "", true);
     }
 }
