@@ -203,6 +203,24 @@ export class BibTeXInProceedings extends BibTeXEntry {
     }
 }
 
+// Represents the @manual BibTeX entry type
+export class BibTeXManual extends BibTeXEntry {
+    constructor(title) {
+        super("manual");
+
+        this.title = new BibTeXField("title", title);
+        this.edition = new BibTeXField("edition", "", true);
+
+        this.author = new BibTeXField("author", "", true);
+
+        this.organization = new BibTeXField("organization", "", true);
+        this.address = new BibTeXField("address", "", true);
+
+        this.year = new BibTeXField("year", "", true);
+        this.month = new BibTeXField("month", BibTeXMonth.None, true);
+    }
+}
+
 // Technically not a BibTeX entry type, but I need it; represents a single webpage
 export class BibTeXWebpage extends BibTeXEntry {
     constructor(author, title, url, dateAccessed) {
