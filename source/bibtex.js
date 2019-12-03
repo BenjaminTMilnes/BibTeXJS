@@ -146,6 +146,36 @@ export class BibTeXArticle extends BibTeXEntry {
     }
 }
 
+// Represents the @incollection BibTeX entry type
+export class BibTeXInCollection extends BibTeXEntry {
+    constructor(title, bookTitle, author, publisher, year) {
+        super("incollection");
+
+        this.title = new BibTeXField("title", title);
+        this.bookTitle = new BibTeXField("bookTitle"    , bookTitle);
+        this.edition = new BibTeXField("edition", "", true);
+
+        this.author = new BibTeXField("author", author, true, "author/editor");
+        this.editor = new BibTeXField("editor", "", true, "author/editor");
+
+        this.publisher = new BibTeXField("publisher", publisher);
+        this.address = new BibTeXField("address", "", true);
+
+        this.year = new BibTeXField("year", year);
+        this.month = new BibTeXField("month", BibTeXMonth.None, true);
+
+        this.volume = new BibTeXField("volume", "", true);
+        this.number = new BibTeXField("number", "", true);
+
+        this.series = new BibTeXField("series", "", true);
+
+        this.chapter = new BibTeXField("chapter", "", true, "chapter/pages");
+        this.pages = new BibTeXField("pages", "", true, "chapter/pages");
+
+        this.type = new BibTeXField("type", "", true);
+    }
+}
+
 // Technically not a BibTeX entry type, but I need it; represents a single webpage
 export class BibTeXWebpage extends BibTeXEntry {
     constructor(author, title, url, dateAccessed) {
