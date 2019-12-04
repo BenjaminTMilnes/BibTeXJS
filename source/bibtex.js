@@ -275,6 +275,29 @@ export class BibTeXPhDThesis extends BibTeXEntry {
     }
 }
 
+// Represents the @proceedings BibTeX entry type
+export class BibTeXProceedings extends BibTeXEntry {
+    constructor(title, year) {
+        super("proceedings");
+
+        this.title = new BibTeXField("title", title);
+
+        this.editor = new BibTeXField("editor", "", true);
+
+        this.publisher = new BibTeXField("publisher", "", true);
+        this.organization = new BibTeXField("organization", "", true);
+        this.address = new BibTeXField("address", "", true);
+
+        this.year = new BibTeXField("year", year);
+        this.month = new BibTeXField("month", BibTeXMonth.None, true);
+
+        this.volume = new BibTeXField("volume", "", true);
+        this.number = new BibTeXField("number", "", true);
+
+        this.series = new BibTeXField("series", "", true);
+    }
+}
+
 // Technically not a BibTeX entry type, but I need it; represents a single webpage
 export class BibTeXWebpage extends BibTeXEntry {
     constructor(author, title, url, dateAccessed) {
