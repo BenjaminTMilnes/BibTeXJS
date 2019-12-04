@@ -256,6 +256,25 @@ export class BibTeXMiscellaneous extends BibTeXEntry {
     }
 }
 
+// Represents the @phdthesis BibTeX entry type
+export class BibTeXPhDThesis extends BibTeXEntry {
+    constructor(title, author, school, year) {
+        super("phdthesis");
+
+        this.title = new BibTeXField("title", title);
+
+        this.author = new BibTeXField("author", author);
+
+        this.school = new BibTeXField("school", school);
+        this.address = new BibTeXField("address", "", true);
+
+        this.year = new BibTeXField("year", year);
+        this.month = new BibTeXField("month", BibTeXMonth.None, true);
+
+        this.type = new BibTeXField("type", "", true);
+    }
+}
+
 // Technically not a BibTeX entry type, but I need it; represents a single webpage
 export class BibTeXWebpage extends BibTeXEntry {
     constructor(author, title, url, dateAccessed) {
