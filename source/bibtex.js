@@ -542,6 +542,53 @@ function isAnyOf(character, characters) {
 
 export class BibTeXImporter {
 
+    _importEntry(inputText, marker) {
+        this._importWhiteSpace(inputText, m);
+        if (!this._expect(inputText, marker, "{")) { return null; }
+        this._importWhiteSpace(inputText, m);
+
+        var fields = this._importFields(inputText, marker);
+
+        this._importWhiteSpace(inputText, m);
+        if (!this._expect(inputText, marker, "}")) { return null; }
+        this._importWhiteSpace(inputText, m);
+    }
+
+    _importFields(inputText, marker) {
+
+        var fields = [];
+        var wasField = true;
+        var n = 0;
+
+        while (wasField) {
+            if (n > 0) {
+                if (!this._expect(inputText, marker, ",")) { return null; }
+            }
+
+            var field = this._importField(inputText, marker);
+
+            if (field === null) {
+                wasField = false;
+            }
+            else {
+                n++;
+                fields.push(field);
+            }
+        }
+
+        return fields;
+    }
+
+    _expect(inputText, marker, character) {
+        if (inputText.charAt(marker.position) == character) {
+            marker.position++;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     _importField(inputText, marker) {
         var m = marker.copy();
 
@@ -551,14 +598,7 @@ export class BibTeXImporter {
         if (name === null) { return null; }
 
         this._importWhiteSpace(inputText, m);
-
-        if (inputText.charAt(marker.position) == "=") {
-            m.position++;
-        }
-        else {
-            return null;
-        }
-
+        if (!this._expect(inputText, marker, "=")) { return null; }
         this._importWhiteSpace(inputText, m);
 
         var value = this._importFieldValue(inputText, m);
