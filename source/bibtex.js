@@ -521,3 +521,152 @@ export class BibTeXExporter {
         return this.convertBibTeXEntriesToText(database.entries);
     }
 }
+
+class Marker {
+    constructor() {
+        this.position = 0;
+    }
+
+    copy() {
+        var marker = new Marker();
+
+        marker.position = this.position;
+
+        return marker;
+    }
+}
+
+function isAnyOf(character, characters) {
+    return characters.indexOf(character) >= 0;
+}
+
+export class BibTeXImporter {
+
+    _importField(inputText, marker) {
+        var m = marker.copy();
+
+        this._importWhiteSpace(inputText, m);
+
+        var name = this._importFieldName(inputText, m);
+        if (name === null) { return null; }
+
+        this._importWhiteSpace(inputText, m);
+
+        if (inputText.charAt(marker.position) == "=") {
+            m.position++;
+        }
+        else {
+            return null;
+        }
+
+        this._importWhiteSpace(inputText, m);
+
+        var value = this._importFieldValue(inputText, m);
+        if (value === null) { return null; }
+
+        this._importWhiteSpace(inputText, m);
+
+        marker.position = m.position;
+
+        var field = new BibTeXField(name, value);
+
+        return field;
+    }
+
+    _importFieldName(inputText, marker) {
+        var t = "";
+
+        while (marker.position < inputText.length) {
+            var c = inputText.charAt(marker.position);
+
+            if (isAnyOf(c, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")) {
+                marker.position++;
+                t += c;
+            }
+            else {
+                break;
+            }
+        }
+
+        if (t != "") {
+            return t;
+        }
+
+        return null;
+    }
+
+    _importFieldValue(inputText, marker) {
+
+        if (inputText.charAt(marker.position) == "\"") {
+            marker.position++;
+
+            var t = "";
+
+            while (marker.position < inputText.length) {
+                var c = inputText.charAt(marker.position);
+
+                marker.position++;
+
+                if (c == "\"") {
+                    break;
+                }
+                else {
+                    t += c;
+                }
+            }
+
+            return t;
+        }
+        else if (inputText.charAt(marker.position) == "{") {
+            marker.position++;
+
+            var n = 1;
+            var t = "";
+
+            while (marker.position < inputText.length) {
+                var c = inputText.charAt(marker.position);
+
+                marker.position++;
+
+                if (c == "{") {
+                    n++;
+                }
+                else if (c == "}") {
+                    n--;
+
+                    if (n == 0) {
+                        break;
+                    }
+                }
+
+                t += c;
+            }
+
+            return t;
+        }
+
+        return null;
+    }
+
+    _importWhiteSpace(inputText, marker) {
+        var t = "";
+
+        while (marker.position < inputText.length) {
+            var c = inputText.charAt(marker.position);
+
+            if (isAnyOf(c, " \t\n")) {
+                marker.position++;
+                t += c;
+            }
+            else {
+                break;
+            }
+        }
+
+        if (t != "") {
+            return t;
+        }
+
+        return null;
+    }
+}
