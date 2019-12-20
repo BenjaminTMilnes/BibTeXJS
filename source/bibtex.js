@@ -319,6 +319,20 @@ export class BibTeXTechReport extends BibTeXEntry {
     }
 }
 
+// Represents the @unpublished BibTeX entry type
+export class BibTeXUnpublished extends BibTeXEntry {
+    constructor(title, author, year, month) {
+        super("unpublished");
+
+        this.title = new BibTeXField("title", title);
+
+        this.author = new BibTeXField("author", author);
+
+        this.year = new BibTeXField("year", year, true);
+        this.month = new BibTeXField("month", month, true);
+    }
+}
+
 // Technically not a BibTeX entry type, but I need it; represents a single webpage
 export class BibTeXWebpage extends BibTeXEntry {
     constructor(author, title, url, dateAccessed) {
