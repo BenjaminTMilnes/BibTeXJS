@@ -2,6 +2,7 @@
 // The base class from which all other BibTeX entries inherit
 export class BibTeXEntry {
     constructor(name) {
+        this._type = "bibtexEntry";
 
         // The entry name, which is one of a set list of values: book, article, ...
         this.name = name;
@@ -12,11 +13,21 @@ export class BibTeXEntry {
         this.note = new BibTeXField("note", "");
         this.key = new BibTeXField("key", "");
     }
+
+    get fields() {
+        return this.keys().filter(k => this[k]._type !== undefined && this[k]._type === "bibtexField").map(k => this[k]);
+    }
+
+    hasFieldWithName(name) {
+        return this.fields.filter(f => f.name == name).length > 0;
+    }
 }
 
 // Represents a BibTeX field, and contains the value of the field as well as other special properties
 export class BibTeXField {
     constructor(name, value, isOptional, requiredFieldGroup) {
+        this._type = "bibtexField";
+
         this.name = name;
         this.value = value;
 
@@ -505,6 +516,7 @@ export class BibTeXExporter {
     convertBibTeXEntriesToText(entries) {
         return entries.map(e => this.convertBibTeXEntryToText(e)).join("");
     }
+
     convertBibTeXDatabaseToText(database) {
         return this.convertBibTeXEntriesToText(database.entries);
     }
