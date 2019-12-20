@@ -298,6 +298,27 @@ export class BibTeXProceedings extends BibTeXEntry {
     }
 }
 
+// Represents the @techreport BibTeX entry type
+export class BibTeXTechReport extends BibTeXEntry {
+    constructor(title, author, institution, year) {
+        super("techreport");
+
+        this.title = new BibTeXField("title", title);
+
+        this.author = new BibTeXField("author", author);
+
+        this.institution = new BibTeXField("institution", institution);
+        this.address = new BibTeXField("address", "", true);
+
+        this.year = new BibTeXField("year", year);
+        this.month = new BibTeXField("month", BibTeXMonth.None, true);
+
+        this.number = new BibTeXField("number", "", true);
+
+        this.type = new BibTeXField("type", "", true);
+    }
+}
+
 // Technically not a BibTeX entry type, but I need it; represents a single webpage
 export class BibTeXWebpage extends BibTeXEntry {
     constructor(author, title, url, dateAccessed) {
