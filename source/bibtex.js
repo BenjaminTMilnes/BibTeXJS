@@ -21,6 +21,10 @@ export class BibTeXEntry {
     hasFieldWithName(name) {
         return this.fields.filter(f => f.name == name).length > 0;
     }
+
+    getFieldWithName(name) {
+        return this.fields.filter(f => f.name == name)[0];
+    }
 }
 
 // Represents a BibTeX field, and contains the value of the field as well as other special properties
@@ -541,17 +545,127 @@ function isAnyOf(character, characters) {
 }
 
 export class BibTeXImporter {
+    constructor() {
+        this.entryTypes = {
+            "book": BibTeXBook,
+            "inbook": BibTeXInBook,
+            "booklet": BibTeXBooklet,
+            "article": BibTeXArticle,
+            "incollection": BibTeXInCollection,
+            "inproceedings": BibTeXInProceedings,
+            "manual": BibTeXManual,
+            "mastersthesis": BibTeXMastersThesis,
+            "misc": BibTeXMiscellaneous,
+            "phdthesis": BibTeXPhDThesis,
+            "proceedings": BibTeXProceedings,
+            "techreport": BibTeXTechReport,
+            "unpublished": BibTeXUnpublished,
+            "webpage": BibTeXWebpage,
+        }
+    }
+
+    importDatabase(inputText) {
+        var marker = new Marker();
+
+        var entries = this._importEntries(inputText, marker);
+
+        var database = new BibTeXDatabase();
+
+        database.entries = entries;
+
+        return database;
+    }
+
+    _importEntries(inputText, marker) {
+        var entries = [];
+        var foundEntry = true;
+
+        while (foundEntry) {
+            var entry = this._importEntry(inputText, marker);
+
+            if (entry !== null) {
+                entries.push(entry);
+            }
+            else {
+                foundEntry = false;
+            }
+        }
+
+        return entries;
+    }
 
     _importEntry(inputText, marker) {
-        this._importWhiteSpace(inputText, m);
-        if (!this._expect(inputText, marker, "{")) { return null; }
-        this._importWhiteSpace(inputText, m);
 
-        var fields = this._importFields(inputText, marker);
+        var m = marker.copy();
 
         this._importWhiteSpace(inputText, m);
-        if (!this._expect(inputText, marker, "}")) { return null; }
+        if (!this._expect(inputText, m, "@")) { return null; }
+
+        var entryType = "";
+
+        while (m.position < inputText.length) {
+            var c = inputText.charAt(m.position);
+
+            if (isAnyOf(c, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")) {
+                m.position++;
+                entryType += c;
+            }
+            else {
+                break;
+            }
+        }
+
+        if (entryType == "") {
+            return null;
+        }
+
         this._importWhiteSpace(inputText, m);
+        if (!this._expect(inputText, m, "{")) { return null; }
+        this._importWhiteSpace(inputText, m);
+
+        var citationKey = "";
+
+        while (m.position < inputText.length) {
+            var c = inputText.charAt(m.position);
+
+            if (isAnyOf(c, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-+:;.")) {
+                m.position++;
+                citationKey += c;
+            }
+            else {
+                break;
+            }
+        }
+
+        if (citationKey != "") {
+            this._importWhiteSpace(inputText, m);
+            if (!this._expect(inputText, m, ",")) { return null; }
+        }
+
+        var fields = this._importFields(inputText, m);
+
+        if (!this._expect(inputText, m, "}")) { return null; }
+
+        if (this.entryTypes[entryType] == undefined) {
+            throw new Error(`'${entryType}' is not a valid BibTeX entry type.`);
+        }
+
+        var entry = new this.entryTypes[entryType]();
+
+        fields.forEach(f => {
+            if (entry.hasFieldWithName(f.name)) {
+                var field = entry.getFieldWithName(f.name);
+
+                field.value = f.value;
+            }
+            else {
+                throw new Error(`The @${entryType} BibTeX entry type does not have a field with the name '${f.name}'.`);
+            }
+        });
+
+        marker.position = m.position;
+
+        return entry;
     }
 
     _importFields(inputText, marker) {
