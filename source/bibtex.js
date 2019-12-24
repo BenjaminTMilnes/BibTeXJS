@@ -561,8 +561,12 @@ export class BibTeXImporter {
             "proceedings": BibTeXProceedings,
             "techreport": BibTeXTechReport,
             "unpublished": BibTeXUnpublished,
-            "webpage": BibTeXWebpage,
+            "webpage": BibTeXWebpage
         }
+
+        this.entryTypeCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        this.citationKeyCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-+:;.";
+        this.fieldNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
     }
 
     importDatabase(inputText) {
@@ -607,7 +611,7 @@ export class BibTeXImporter {
         while (m.position < inputText.length) {
             var c = inputText.charAt(m.position);
 
-            if (isAnyOf(c, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")) {
+            if (isAnyOf(c, this.entryTypeCharacters)) {
                 m.position++;
                 entryType += c;
             }
@@ -629,7 +633,7 @@ export class BibTeXImporter {
         while (m.position < inputText.length) {
             var c = inputText.charAt(m.position);
 
-            if (isAnyOf(c, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-+:;.")) {
+            if (isAnyOf(c, this.citationKeyCharacters)) {
                 m.position++;
                 citationKey += c;
             }
@@ -738,7 +742,7 @@ export class BibTeXImporter {
         while (marker.position < inputText.length) {
             var c = inputText.charAt(marker.position);
 
-            if (isAnyOf(c, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")) {
+            if (isAnyOf(c, this.fieldNameCharacters)) {
                 marker.position++;
                 t += c;
             }
