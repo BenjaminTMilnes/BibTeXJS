@@ -1,4 +1,5 @@
 
+
 // The base class from which all other BibTeX entries inherit
 export class BibTeXEntry {
     constructor(name) {
@@ -15,7 +16,7 @@ export class BibTeXEntry {
     }
 
     get fields() {
-        return this.keys().filter(k => this[k]._type !== undefined && this[k]._type === "bibtexField").map(k => this[k]);
+        return Object.keys(this).filter(k => this[k]._type !== undefined && this[k]._type === "bibtexField").map(k => this[k]);
     }
 
     hasFieldWithName(name) {
@@ -644,7 +645,9 @@ export class BibTeXImporter {
 
         var fields = this._importFields(inputText, m);
 
+        this._importWhiteSpace(inputText, m);
         if (!this._expect(inputText, m, "}")) { return null; }
+        this._importWhiteSpace(inputText, m);
 
         if (this.entryTypes[entryType] == undefined) {
             throw new Error(`'${entryType}' is not a valid BibTeX entry type.`);
@@ -652,16 +655,18 @@ export class BibTeXImporter {
 
         var entry = new this.entryTypes[entryType]();
 
-        fields.forEach(f => {
-            if (entry.hasFieldWithName(f.name)) {
-                var field = entry.getFieldWithName(f.name);
+        entry.citationKey = citationKey;
 
-                field.value = f.value;
-            }
-            else {
-                throw new Error(`The @${entryType} BibTeX entry type does not have a field with the name '${f.name}'.`);
-            }
-        });
+        if (fields !== null) {
+            fields.forEach(f => {
+                if (entry.hasFieldWithName(f.name)) {
+                    entry[f.name].value = f.value;
+                }
+                else {
+                    throw new Error(`The @${entryType} BibTeX entry type does not have a field with the name '${f.name}'.`);
+                }
+            });
+        }
 
         marker.position = m.position;
 
@@ -676,7 +681,7 @@ export class BibTeXImporter {
 
         while (wasField) {
             if (n > 0) {
-                if (!this._expect(inputText, marker, ",")) { return null; }
+                if (!this._expect(inputText, marker, ",")) { break; }
             }
 
             var field = this._importField(inputText, marker);
@@ -712,7 +717,7 @@ export class BibTeXImporter {
         if (name === null) { return null; }
 
         this._importWhiteSpace(inputText, m);
-        if (!this._expect(inputText, marker, "=")) { return null; }
+        if (!this._expect(inputText, m, "=")) { return null; }
         this._importWhiteSpace(inputText, m);
 
         var value = this._importFieldValue(inputText, m);
