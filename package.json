@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/BenjaminTMilnes/BibTeXJS#readme",
   "dependencies": {
-    "mocha": "^6.2.2",
+    "mocha": "^10.2.0",
     "mocha-logger": "^1.0.6"
   },
   "devDependencies": {
